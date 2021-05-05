@@ -29,7 +29,7 @@ def start_captcha_task(sitekey, client_key):
     return r.json()
 
 
-captcha_id = start_captcha_task(sitekey, client_key)
+# captcha_id = start_captcha_task(sitekey, client_key)
 
 
 def get_solved_captcha(task_id, client_key):
@@ -43,7 +43,7 @@ def get_solved_captcha(task_id, client_key):
     return r.json()
 
 
-print(get_solved_captcha(captcha_id["taskId"], client_key))
+# print(get_solved_captcha(captcha_id["taskId"], client_key))
 
 
 def login(username, password, captcha_key):
@@ -85,6 +85,7 @@ def login(username, password, captcha_key):
     return r.status_code
 
 
+"""
 # Login flow
 while True:
     if login(username, password, get_solved_captcha(captcha_id["taskId"], client_key)) != 200:
@@ -94,6 +95,7 @@ while True:
     else:
         print("Successfully logged in")
         break
+"""
 
 
 def addToCart(item_id):
@@ -121,12 +123,21 @@ def addToCart(item_id):
     response = s.get('https://www.pokemoncenter-online.com/?p_cd=' + item_id,
                      headers=headers, params=params)
     soup = BeautifulSoup(response.text, 'html.parser')
-    # print(soup.prettify.encode('utf-8')
+
+    with open("output1.html", "w", encoding='utf-8') as file:
+        file.write(str(soup.prettify()))
+
+    print(response.cookies)
+    print(response.headers)
+
     print(str(response.status_code) + '  add to cart')
 
     return response.status_code
 
 
+addToCart(item_id)
+
+"""
 while True:
     if addToCart(item_id) != 200:  # unsuccess add to cart .
         addToCart(item_id)
@@ -272,3 +283,4 @@ if confirmation() == 200:  # unsuccess to step 4 .
     print('successfully purchase')
 
 # print(response.cookies)
+"""
