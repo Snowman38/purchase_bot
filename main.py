@@ -1,40 +1,13 @@
 import requests
-from bs4 import BeautifulSoup
-import sys
+import asyncio
 import time
 
-s = requests.session()
-
-headers = {
-    'Connection': 'keep-alive',
-    'Cache-Control': 'max-age=0',
-    'sec-ch-ua': '^\\^',
-    'sec-ch-ua-mobile': '?0',
-    'Upgrade-Insecure-Requests': '1',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'Sec-Fetch-Site': 'same-origin',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-User': '?1',
-    'Sec-Fetch-Dest': 'document',
-    'Referer': 'https://www.pokemoncenter-online.com/?main_page=shopping_cart',
-    'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-    'dnt': '1',
-}
-
-params = (
-    ('main_page', 'login'),
-)
-
-g = s.get('https://www.pokemoncenter-online.com/',
-          params=params, headers=headers)
-
-soup = BeautifulSoup(g.text, 'html.parser')
-
-print(soup.prettify().encode('utf-8'))
-
+sitekey = "6LcwhoEUAAAAAIPQCm9zx-S7Ai9VBfu28bxIFBw5"
+client_key = "08fa3a631937eae924d92a1de6ae01cd"
 
 """
+s = requests.session()
+
 headers = {
     'Connection': 'keep-alive',
     'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
@@ -58,11 +31,44 @@ params = (
 response = s.get('https://www.pokemoncenter-online.com/?p_cd=4521329314112',
                  headers=headers, params=params)
 
+
 while true:
     if response.status != 200:
         s.get('https://www.pokemoncenter-online.com/?p_cd=4521329314112',
               headers=headers, params=params)
     else:
-
-print(response.cookies)
+        print(response.cookies)
 """
+
+
+def start_captcha_task(sitekey, client_key):
+
+    data = {
+        "clientKey": client_key,
+        "task": {
+            "type": "NoCaptchaTaskProxyless",
+            "websiteURL": "https://www.pokemoncenter-online.com",
+            "websiteKey": sitekey
+        }
+    }
+
+    r = requests.post("https://api.capmonster.cloud/createTask", json=data)
+
+    return r.json()
+
+
+captcha_id = start_captcha_task(sitekey, client_key)
+
+
+def get_solved_captcha(task_id, client_key):
+    data = {
+        "clientKey": client_key,
+        "taskId": task_id
+    }
+
+    r = requests.post("https://api.capmonster.cloud/getTaskResult", json=data)
+
+    return r.json()
+
+
+print(get_solved_captcha(captcha_id["taskId"], client_key))
