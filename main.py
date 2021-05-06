@@ -10,11 +10,7 @@ client_key = "08fa3a631937eae924d92a1de6ae01cd"
 
 username = "nunu18858@gmail.com"
 password = "1278Okamoto"
-<<<<<<< HEAD
-item_id = "4521329328539"
-=======
-item_id = "4521329319124"
->>>>>>> 05e70868adf8f3533edb69321003838fbf060de4
+item_id = "4521329326290"
 
 s = requests.Session()
 
@@ -76,7 +72,7 @@ def start_v3_task(v3_key, v3_source, client_key):
             "type": "RecaptchaV3TaskProxyless",
             "websiteURL": v3_source,
             "websiteKey": v3_key,
-            "minScore": 0.7,
+            "minScore": 0.3,
         }
     }
 
@@ -295,7 +291,6 @@ def conformation(v3_captcha):
         'cc_token': '',
         'recaptchaResponse': v3_captcha['solution']['gRecaptchaResponse'],
         'agecheck': '1',
-        'ioBlackBox': '0400R9HVeoYv1gsNf94lis1ztl2f0eBwPuTXobqahih8hnVmMV0Uegdggpnwt3khnD2JYn6bo3wR2dDu2MJCSi12NBBoiZbfxP1Whlz5wlRFwWJi0FRulruXQQGCQaJkXU7G9DG/ZYNBQ5CZy8DWHTI6PKYR9FtpPsLf0LVQmADUFBlDgm50c6V/UpKetslI3IixYH1H5YVrp93GJ/KtOFGi8RKePA1UZdKAZDwic+y5/r+SkyAbziDM7k8xAXTS4l7D1erHMnjL6rgoFtmWiT5CtQQoy8fRBma0k8bxHmac52ZUgBbu4NCNc/UJiL5MGqveD8yk2P58fl2/CxCXSzPsuvwlVGRXsC+UAyja8ukF0Y+Ydj7z7gTl8IDu7QEktcP6Dc2OvubRtWo85h7zmVcUJCwV5/ikQq1hiy9m/Wm6JCR3SYyEah9grx5vwlEb9kGF8XsJeWPv2CfvsD8Ae2HMhAjTuni0YYcF7yZHbT+hap8tD/arQoCgDsCq9DH/qIFmOg9w7I7EUjavOr9rHvsi6io4N6s29qS51PXpN4zl2IQd/tZS2Kh2RAUAlwIlxxFedaR5amc3N6//MTxvKrOP4M3X8S8pWAYm7BFQVjvF0CKqWvTbz/c+r/UnhdaqAmFMwV5whZZe8pVAR27Zdi+vjqJygRQgGX10lcABhHdx+C+HElF3mDpJdeqGueuY3v0E0RIcZLJBvkQzqbwpmWa8I0TFyfSBJ30b+F9+VNHlcz2VwAGEd3H4L952RAUPKwCzLQAfZaA7jSiwHHrDW3HSYxnPse2ZJCsq4e3f1u/ETzp5VpgkQXTQzZ2bCkUkx/iDgKZvlQz/i/ANumdlAvhrS65W0/JYns2F5mNV6QxgbclhfIUcFuybLLNvS9LBZED55Ix5aAKTQzySBBWhu07LmRdt5U4CpewIj2qku3ZkvzkAM9dbBROeNQfbQD1p+KEcV6i8/tb5alAK/XRNo3H5dCCofHI9aHmKIvykvMPBtR3vWWD9CL9m3pCRZYibrlH8ppJ3yMVEh3W4DSjgJRVjwImc/hLJK9CERs80inu0Ti1qmQ7gb6+QyYTj3WkSCkM/GZqCjRkP2oiPBbtD4X5du+dVvu4eBdAZqgjITrQVcyqmjIkq5qftSzYKc0l3GqSVnbPexAyx9XKwLY4MxzBgJOfH8d/kXMM9COBxCZxjphtLxKF6v2PPxl4QQc9zoBJvG/4+kPO6g2PZuCYrzj4mEQTXvE++wwwVgNL0dkmB9YRWwDlJiVtQ+Nz5Jd5YrZYAFmnk1OM30hwQNKm7Hrqv7aD71oukcCgDEmZT488oIo+l0AxSHQToO7wHwZKXZEvy9czRFj/aS+eAhe3zqDgC6HA+k9XRlIy/gBX4seaaPhzNObRPeqyOxc9UU+kX2P516UEebV6XQGs75MIMXZVsu1YGy5Ew1ed+4yvRhXnDkIvj0bcICDdWTWc4gEZRexotiefsmx/TjSGW9udtcOjzp+XQZkNMOtsAOQih2ylNcH3Kygfgkr6Iw9eMy1NOWJBDjsnLkkIF/EJJNbsUFAronRxF+K4VXoxPCoWcL183ISo4i5w/cvsst8+/S2Y8/pUL',
     }
 
     response = s.post('https://www.pokemoncenter-online.com/?main_page=checkout_process',
@@ -359,7 +354,7 @@ while True:
     else:
         break
 
-# getting captcha on the conformation page
+# Solve v3 captcha on the confirmation page
 captcha_v3_id = start_v3_task(v3_key, v3_source, client_key)["taskId"]
 
 while True:   # try until sever solved the recaptcha
@@ -367,6 +362,7 @@ while True:   # try until sever solved the recaptcha
         print("Captcha v3 empty, retrying")
         time.sleep(3)
     else:
+        conformation(get_v3_response(captcha_v3_id, client_key))
         break
 
 # Conform your order
@@ -375,4 +371,29 @@ while True:
         print("sending confirmation failed, retrying")
         time.sleep(1)
     else:
+        break
+
+
+# Solve checkout v2 captcha
+captcha_confirm = start_captcha_task(sitekey, client_key)
+
+while True:
+    if get_solved_captcha(captcha_confirm["taskId"], client_key)["status"] == "processing":
+        print("[CAPMONSTER] Waiting for captcha...")
+        time.sleep(3)
+    else:
+        print("[CAPMONSTER] Captcha solved.")
+        conformation(get_solved_captcha(captcha_confirm["taskId"], client_key))
+        break
+
+
+while True:
+    # solving captcha
+    if get_solved_captcha(captcha_id["taskId"], client_key)['status'] == "processing":
+        # retry until sever send you the answer
+        print("Captcha Empty, retrying")
+        time.sleep(3)
+    else:
+        print("Captcha solved, confirming order...")
+        conformation(get_v3_response(captcha_id, client_key))
         break
