@@ -1,6 +1,9 @@
 import requests
+import time
 from bs4 import BeautifulSoup
 
+v3_key = "6LfDcPoUAAAAAM5gneG6VuVeJQLfDpErocIh4fwD"
+v3_source = "https://www.pokemoncenter-online.com/?main_page=checkout_confirmation"
 
 sitekey = "6LcwhoEUAAAAAIPQCm9zx-S7Ai9VBfu28bxIFBw5"
 client_key = "08fa3a631937eae924d92a1de6ae01cd"
@@ -59,7 +62,33 @@ def get_solved_captcha(task_id, client_key):
     }
 
     r = requests.post("https://api.capmonster.cloud/getTaskResult", json=data)
-    ("Recieved Captcha.")
+    print(r.json())
+    return r.json()
+
+
+def start_v3_task(v3_key, v3_source, client_key):
+    data = {
+        "clientKey": client_key,
+        "task": {
+            "type": "RecaptchaV3TaskProxyless",
+            "websiteURL": v3_source,
+            "websiteKey": v3_key,
+            "minScore": 0.7,
+        }
+    }
+
+    r = requests.post("https://api.capmonster.cloud/createTask", json=data)
+    return r.json()
+
+
+def get_v3_response(task_id, client_key):
+    data = {
+        "clientKey": client_key,
+        "taskId": task_id,
+    }
+
+    r = requests.post("https://api.capmonster.cloud/getTaskResult", json=data)
+    print("Recieved v3 response")
     return r.json()
 
 
@@ -91,7 +120,7 @@ def login(username, password, captcha_key):
     data = {
         'login_address': username,
         'password': password,
-        'g-recaptcha-response': captcha_key['solution']['gRecaptchaResponse']
+        'g-recaptcha-response': captcha_key
     }
 
     r = s.post('https://www.pokemoncenter-online.com/?main_page=login&action=process',
@@ -235,7 +264,7 @@ def goToStep4():
     return response.status_code
 
 
-def confirmation():
+def confirmation(v3_captcha):
     headers_step4 = {
         'Connection': 'keep-alive',
         'Cache-Control': 'max-age=0',
@@ -260,9 +289,9 @@ def confirmation():
 
     data_step4 = {
         'cc_token': '',
-        # 'recaptchaResponse': '03AGdBq27HuOR4sqWpXNp27zHs2RlT40ijYzsXfp-wsoqyujm9lmWCOvSGma-tpOWsg1LeTJD9KRVTljisOAF7bsG2Q17yIKHrL2moerbcL4j9q79Jv98PjVGpr_0NiUeoz70vMhehFRVt5ImsqioXwgSHBEs5YTdkEH5-5Ie5abEo-qSirbQpY5Ay1Tk_I30MBXZQz4JvP86AMvouymf0KsB2nbbsibLtpwWkz_cSNLudjtquZfcGe6tmHZr5sCVfWSka6t3fgHCdQ0Oga9EPAzv7RdocBUXOhMnI6KmC_g9C33QwA6sJkHagxdwCTBRsvAME_C6GzXsLRtnP5_5oqQP5XpXiZKYZNnrz_wUZlLrdazNMk3zxxDnY7zQUXHAxdpWqbO9BkzUdtZMO4mDgFukQC2BfqLJzg2VZ4ECYQ8-UcvkZ00k3YYMWsc1yTOuHCrUWwgTzngezr5AY5gQhOll29bYQXnVWqwQPTw_1iMfF0yMyic8Byu0',
+        'recaptchaResponse': v3_captcha['solution']['gRecaptchaResponse'],
         'agecheck': '1',
-        # 'ioBlackBox': '0400R9HVeoYv1gsNf94lis1ztl2f0eBwPuTXobqahih8hnVmMV0Uegdggpnwt3khnD2JYn6bo3wR2dDu2MJCSi12NBBoiZbfxP1Whlz5wlRFwWJi0FRulruXQQGCQaJkXU7G9DG/ZYNBQ5CZy8DWHTI6PKYR9FtpPsLf0LVQmADUFBlDgm50c6V/UpKetslI3IixYH1H5YVrp93GJ/KtOFGi8RKePA1UZdKAZDwic+y5/r+SkyAbziDM7k8xAXTS4l7D1erHMnjL6rgoFtmWiT5CtQQoy8fRBma0k8bxHmac52ZUgBbu4NCNc/UJiL5MGqvetG3HqlFCLvW/bzn4/zo2+02BsxVnnQs2zfDowfbw2uVrhMvWeZzwDOZsjHs3PiDdANQor3U91ow85h7zmVcUJNEAtEMdY2g2piIn/4g7jAnC1AevYOBPe8UvRkxkPz1xPGsqpmVl2tnAqvQx/6iBZjoPcOyOxFI2BKLsrHKFK5VCqyTK8LKzctT16TeM5diEHf7WUtiodkQPzf3Q6z+CNnsflDqqr32sdArZwIoMuyjN1/EvKVgGJuwRUFY7xdAiqlr028/3Pq/1J4XWqgJhTMFecIWWXvKVQEdu2XYvr46icoEUIBl9dJXAAYR3cfgvhxJRd5g6SXXqhrnrmN79BNESHGSyQb5EM6m8KZlmvCNExcn0gSd9G/hfflTR5XM9lcABhHdx+C/edkQFDysAsy0AH2WgO40osBx6w1tx0mMZz7HtmSQrKuHt39bvxE86eVaYJEF00M2dmwpFJMf4g4Cmb5UM/4vwDbpnZQL4a0uuVtPyWJ7NheZjVekMYG3JYXyFHBbsmyyzb0vSwWRA+eSMeWgCk0M8kgQVobtOy5kXbeVOAqXsCI9qpLt2ZL85ADPXWwUTnjUH20A9afihHFeovP7W+WpQCv10TaNx+XQgqHxyPWh5ihek/rBXsb8RgJnjRx+vsOoysA/IfO8HBxSm14l9HowIxpdhcydfoD/HpaMZB6qa7he8ghSnRXCYbgbm3tLvHs0o9ETsqFNXePej/eAatMgA+IWxppxSapZauODchk2WrH2LOmVQKLUdYeTcLtcejyCxPk2UkqDvdYEYDfmfBwBYRhc3f5urJ1aotlycMEBL1IzyVekwhI5/tPvXfQEg+KLRVsDNUznM+4IlRQO86SD0OIS7LH591kg7Q92FGKueu33EPopga4/ZM01CDD4rLIv4xPDcpR57NLB95ACgmnUHgChX76n40U18n9NGrU6qnseMYGIoyANRpBH2oITY/3Nu6f8tsMYXiQmV0jazVeFl5sdrzcINkHrBPdBaPIi5ACXz0f07yUmDyuM/37O95k44XxwMXkDk35Y/TtL0elc8rRS5aFgDWT2C+ZC/uhKlHrNbg1PUG+c6Toh1ixUl+hEWF+LPo0WlvBpjnvEcJP4gJuow/Y6swkyDn09MGPGkRbCdsLJ2psgBVSaircwUTU6bnW7Z1lHdnCeZNJ72Jz1Tlkc6bU/8d88s1yhEhfQSW9cHJ8AMQ6Irq0dBLp4BOsE='
+        'ioBlackBox': '0400R9HVeoYv1gsNf94lis1ztl2f0eBwPuTXobqahih8hnVmMV0Uegdggpnwt3khnD2JYn6bo3wR2dDu2MJCSi12NBBoiZbfxP1Whlz5wlRFwWJi0FRulruXQQGCQaJkXU7G9DG/ZYNBQ5CZy8DWHTI6PKYR9FtpPsLf0LVQmADUFBlDgm50c6V/UpKetslI3IixYH1H5YVrp93GJ/KtOFGi8RKePA1UZdKAZDwic+y5/r+SkyAbziDM7k8xAXTS4l7D1erHMnjL6rgoFtmWiT5CtQQoy8fRBma0k8bxHmac52ZUgBbu4NCNc/UJiL5MGqvetG3HqlFCLvW/bzn4/zo2+02BsxVnnQs2zfDowfbw2uVrhMvWeZzwDOZsjHs3PiDdANQor3U91ow85h7zmVcUJNEAtEMdY2g2piIn/4g7jAnC1AevYOBPe8UvRkxkPz1xPGsqpmVl2tnAqvQx/6iBZjoPcOyOxFI2BKLsrHKFK5VCqyTK8LKzctT16TeM5diEHf7WUtiodkQPzf3Q6z+CNnsflDqqr32sdArZwIoMuyjN1/EvKVgGJuwRUFY7xdAiqlr028/3Pq/1J4XWqgJhTMFecIWWXvKVQEdu2XYvr46icoEUIBl9dJXAAYR3cfgvhxJRd5g6SXXqhrnrmN79BNESHGSyQb5EM6m8KZlmvCNExcn0gSd9G/hfflTR5XM9lcABhHdx+C/edkQFDysAsy0AH2WgO40osBx6w1tx0mMZz7HtmSQrKuHt39bvxE86eVaYJEF00M2dmwpFJMf4g4Cmb5UM/4vwDbpnZQL4a0uuVtPyWJ7NheZjVekMYG3JYXyFHBbsmyyzb0vSwWRA+eSMeWgCk0M8kgQVobtOy5kXbeVOAqXsCI9qpLt2ZL85ADPXWwUTnjUH20A9afihHFeovP7W+WpQCv10TaNx+XQgqHxyPWh5ihek/rBXsb8RgJnjRx+vsOoysA/IfO8HBxSm14l9HowIxpdhcydfoD/HpaMZB6qa7he8ghSnRXCYbgbm3tLvHs0o9ETsqFNXePej/eAatMgA+IWxppxSapZauODchk2WrH2LOmVQKLUdYeTcLtcejyCxPk2UkqDvdYEYDfmfBwBYRhc3f5urJ1aotlycMEBL1IzyVekwhI5/tPvXfQEg+KLRVsDNUznM+4IlRQO86SD0OIS7LH591kg7Q92FGKueu33EPopga4/ZM01CDD4rLIv4xPDcpR57NLB95ACgmnUHgChX76n40U18n9NGrU6qnseMYGIoyANRpBH2oITY/3Nu6f8tsMYXiQmV0jazVeFl5sdrzcINkHrBPdBaPIi5ACXz0f07yUmDyuM/37O95k44XxwMXkDk35Y/TtL0elc8rRS5aFgDWT2C+ZC/uhKlHrNbg1PUG+c6Toh1ixUl+hEWF+LPo0WlvBpjnvEcJP4gJuow/Y6swkyDn09MGPGkRbCdsLJ2psgBVSaircwUTU6bnW7Z1lHdnCeZNJ72Jz1Tlkc6bU/8d88s1yhEhfQSW9cHJ8AMQ6Irq0dBLp4BOsE='
     }
 
     response = requests.post('https://www.pokemoncenter-online.com/?main_page=checkout_process',
@@ -273,17 +302,31 @@ def confirmation():
     with open("step4.html", "w", encoding='utf-8') as file:
         file.write(str(soup.prettify()))
 
+    print("Confirmed order")
     return response.status_code
-
-
-if confirmation() == 200:  # unsuccess to step 4 .
-    print('successfully purchase')
 
 
 get_session()
 captcha_id = start_captcha_task(sitekey, client_key)
-login(username, password, get_solved_captcha(captcha_id["taskId"], client_key))
+
+while True:
+    if get_solved_captcha(captcha_id["taskId"], client_key)['status'] == "processing":
+        print("Captcha Empty, retrying")
+        time.sleep(3)
+    else:
+        login(username, password, get_solved_captcha(
+            captcha_id["taskId"], client_key)['solution']['gRecaptchaResponse'])
+        break
+
 addToCart(item_id)
 goToStep3()
 goToStep4()
-confirmation()
+captcha_v3_id = start_v3_task(v3_key, v3_source, client_key)["taskId"]
+
+while True:
+    if get_v3_response(captcha_v3_id, client_key)['status'] == "processing":
+        print("Captcha v3 empty, retrying")
+        time.sleep(3)
+    else:
+        confirmation(get_v3_response(captcha_v3_id, client_key))
+        break
