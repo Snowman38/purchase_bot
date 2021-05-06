@@ -218,6 +218,7 @@ def goToStep3():
     return response.status_code
 
 
+# step3 -> step 4
 def goToStep4():
     headers_step3 = {
         'Connection': 'keep-alive',
@@ -243,11 +244,11 @@ def goToStep4():
 
     data_step3 = {
         'action': 'process',
-        'payment': 'cvs',
+        'payment': 'cvs',  # selecting convenience store to make the process faster
+        # select your payment shop(2=lowson 3=family mart 4=Daily-yamazaki 5= MINI STOP 6=セイコーマート)
         'cvs': '2'
     }
 
-    # step3 -> step 4
     response = s.post('https://www.pokemoncenter-online.com/',
                       headers=headers_step3, params=params_step3, data=data_step3)
 
@@ -263,7 +264,7 @@ def goToStep4():
     return response.status_code
 
 
-def confirmation(v3_captcha):
+def conformation(v3_captcha):
     headers_step4 = {
         'Connection': 'keep-alive',
         'Cache-Control': 'max-age=0',
@@ -304,27 +305,58 @@ def confirmation(v3_captcha):
     return response.status_code
 
 
-get_session()
-captcha_id = start_captcha_task(sitekey, client_key)
+get_session()  # request to get the cookies
+captcha_id = start_captcha_task(sitekey, client_key)  # get captcha on your login form
 
+# login to the website
 while True:
-    if get_solved_captcha(captcha_id["taskId"], client_key)['status'] == "processing":
-        print("Captcha Empty, retrying")
+    if get_solved_captcha(captcha_id["taskId"], client_key)['status'] == "processing":  # solving captcha
+        print("Captcha Empty, retrying")  # retry until sever send you the answer
         time.sleep(3)
     else:
         login(username, password, get_solved_captcha(
-            captcha_id["taskId"], client_key)['solution']['gRecaptchaResponse'])
+            captcha_id["taskId"], client_key)['solution']['gRecaptchaResponse'])  # login to the website
         break
 
-addToCart(item_id)
-goToStep3()
-goToStep4()
+# process of adding item to the cart
+while True:
+    if addToCart(item_id) != 200:  # if  fail to add-to-cart then try again
+        print("fail to adding to the cart, retrying")
+        time.sleep(2)
+    else:
+        break
+
+# process of selecting delivery options
+while True:
+    if goToStep3() != 200:  # try send the request of the delivery options
+        print("fail to send your delivery options, retrying")
+        time.sleep(2)
+    else:
+        break
+
+
+# process of selecting payment method
+while True:
+    if goToStep4() != 200:  # try send the request of the payment form
+        print("fail to send your payment information, retrying")
+        time.sleep(2)
+    else:
+        break
+
+# getting captcha on the conformation page
 captcha_v3_id = start_v3_task(v3_key, v3_source, client_key)["taskId"]
 
-while True:
+while True:   # try until sever solved the recaptcha
     if get_v3_response(captcha_v3_id, client_key)['status'] == "processing":
         print("Captcha v3 empty, retrying")
         time.sleep(3)
     else:
-        confirmation(get_v3_response(captcha_v3_id, client_key))
+        break
+
+# Conform your order
+while True:
+    if conformation(get_v3_response(captcha_v3_id, client_key)) != 200:
+        print("sending confirmation failed, retrying")
+        time.sleep(1)
+    else:
         break
