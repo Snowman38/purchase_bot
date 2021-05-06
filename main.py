@@ -10,7 +10,7 @@ client_key = "08fa3a631937eae924d92a1de6ae01cd"
 
 username = "nunu18858@gmail.com"
 password = "1278Okamoto"
-item_id = "4521329314112"
+item_id = "4521329328539"
 
 s = requests.Session()
 
@@ -170,7 +170,7 @@ def addToCart(item_id):
 
     print(str(response.status_code) + '  add to cart')
 
-    return response.status_code
+    return [response.status_code, response.json()]
 
 
 def goToStep3():
@@ -291,6 +291,7 @@ def conformation(v3_captcha):
         'cc_token': '',
         'recaptchaResponse': v3_captcha['solution']['gRecaptchaResponse'],
         'agecheck': '1',
+        'ioBlackBox': '0400R9HVeoYv1gsNf94lis1ztl2f0eBwPuTXobqahih8hnVmMV0Uegdggpnwt3khnD2JYn6bo3wR2dDu2MJCSi12NBBoiZbfxP1Whlz5wlRFwWJi0FRulruXQQGCQaJkXU7G9DG/ZYNBQ5CZy8DWHTI6PKYR9FtpPsLf0LVQmADUFBlDgm50c6V/UpKetslI3IixYH1H5YVrp93GJ/KtOFGi8RKePA1UZdKAZDwic+y5/r+SkyAbziDM7k8xAXTS4l7D1erHMnjL6rgoFtmWiT5CtQQoy8fRBma0k8bxHmac52ZUgBbu4NCNc/UJiL5MGqvetG3HqlFCLvW/bzn4/zo2+02BsxVnnQs2zfDowfbw2uVrhMvWeZzwDOZsjHs3PiDdANQor3U91ow85h7zmVcUJNEAtEMdY2g2piIn/4g7jAnC1AevYOBPe8UvRkxkPz1xPGsqpmVl2tnAqvQx/6iBZjoPcOyOxFI2BKLsrHKFK5VCqyTK8LKzctT16TeM5diEHf7WUtiodkQPzf3Q6z+CNnsflDqqr32sdArZwIoMuyjN1/EvKVgGJuwRUFY7xdAiqlr028/3Pq/1J4XWqgJhTMFecIWWXvKVQEdu2XYvr46icoEUIBl9dJXAAYR3cfgvhxJRd5g6SXXqhrnrmN79BNESHGSyQb5EM6m8KZlmvCNExcn0gSd9G/hfflTR5XM9lcABhHdx+C/edkQFDysAsy0AH2WgO40osBx6w1tx0mMZz7HtmSQrKuHt39bvxE86eVaYJEF00M2dmwpFJMf4g4Cmb5UM/4vwDbpnZQL4a0uuVtPyWJ7NheZjVekMYG3JYXyFHBbsmyyzb0vSwWRA+eSMeWgCk0M8kgQVobtOy5kXbeVOAqXsCI9qpLt2ZL85ADPXWwUTnjUH20A9afihHFeovP7W+WpQCv10TaNx+XQgqHxyPWh5ihek/rBXsb8RgJnjRx+vsOoysA/IfO8HBxSm14l9HowIxpdhcydfoD/HpaMZB6qa7he8ghSnRXCYbgbm3tLvHs0o9ETsqFNXePej/eAatMgA+IWxppxSapZauODchk2WrH2LOmVQKLUdYeTcLtcejyCxPk2UkqDvdYEYDfmfBwBYRhc3f5urJ1aotlycMEBL1IzyVekwhI5/tPvXfQEg+KLRVsDNUznM+4IlRQO86SD0OIS7LH591kg7Q92FGKueu33EPopga4/ZM01CDD4rLIv4xPDcpR57NLB95ACgmnUHgChX76n40U18n9NGrU6qnseMYGIoyANRpBH2oITY/3Nu6f8tsMYXiQmV0jazVeFl5sdrzcINkHrBPdBaPIi5ACXz0f07yUmDyuM/37O95k44XxwMXkDk35Y/TtL0elc8rRS5aFgDWT2C+ZC/uhKlHrNbg1PUG+c6Toh1ixUl+hEWF+LPo0WlvBpjnvEcJP4gJuow/Y6swkyDn09MGPGkRbCdsLJ2psgBVSaircwUTU6bnW7Z1lHdnCeZNJ72Jz1Tlkc6bU/8d88s1yhEhfQSW9cHJ8AMQ6Irq0dBLp4BOsE=',
     }
 
     response = s.post('https://www.pokemoncenter-online.com/?main_page=checkout_process',
@@ -306,24 +307,34 @@ def conformation(v3_captcha):
 
 
 get_session()  # request to get the cookies
-captcha_id = start_captcha_task(sitekey, client_key)  # get captcha on your login form
+# get captcha on your login form
+captcha_id = start_captcha_task(sitekey, client_key)
 
 # login to the website
 while True:
-    if get_solved_captcha(captcha_id["taskId"], client_key)['status'] == "processing":  # solving captcha
-        print("Captcha Empty, retrying")  # retry until sever send you the answer
+    # solving captcha
+    if get_solved_captcha(captcha_id["taskId"], client_key)['status'] == "processing":
+        # retry until sever send you the answer
+        print("Captcha Empty, retrying")
         time.sleep(3)
     else:
         login(username, password, get_solved_captcha(
             captcha_id["taskId"], client_key)['solution']['gRecaptchaResponse'])  # login to the website
         break
 
+cart = addToCart(item_id)
+
 # process of adding item to the cart
 while True:
-    if addToCart(item_id) != 200:  # if  fail to add-to-cart then try again
-        print("fail to adding to the cart, retrying")
+    if cart[0] != 200:  # if  fail to add-to-cart then try again
+        print("Server error adding to cart, retrying")
+        cart = addToCart(item_id)
         time.sleep(2)
     else:
+        if(cart[1]["code"] != "000"):
+            print("Product not available.")
+        else:
+            print("Added to cart successfully.")
         break
 
 # process of selecting delivery options
