@@ -10,7 +10,7 @@ client_key = "08fa3a631937eae924d92a1de6ae01cd"
 
 username = "nunu18858@gmail.com"
 password = "1278Okamoto"
-item_id = "4521329314112"
+item_id = "4521329319124"
 
 s = requests.Session()
 
@@ -314,6 +314,7 @@ while True:
         print("Captcha Empty, retrying")  # retry until sever send you the answer
         time.sleep(3)
     else:
+        print("Captcha solved, login to the website")
         login(username, password, get_solved_captcha(
             captcha_id["taskId"], client_key)['solution']['gRecaptchaResponse'])  # login to the website
         break
