@@ -30,29 +30,50 @@
    <meta content="#da532c" name="msapplication-TileColor"/>
    <meta content="/static/image/favicon/mstile-144x144.png" name="msapplication-TileImage"/>
    <meta content="#ffffff" name="theme-color"/>
-   <meta content="タイムアウト : ポケモンセンターオンライン" property="og:title"/>
-   <meta content="https://www.pokemoncenter-online.com/?main_page=time_out" property="og:url"/>
+   <meta content="ご注文完了 : ポケモンセンターオンライン" property="og:title"/>
+   <meta content="https://www.pokemoncenter-online.com/?main_page=checkout_success" property="og:url"/>
    <meta content="website" property="og:type"/>
    <meta content="ポケモンオフィシャルショップ。ポケモンセンターオリジナルのおもちゃや雑貨、ステーショナリーなど、バリエーション豊富な商品とポケモンセンターオンライン限定商品も販売しています。 " property="og:description"/>
    <meta content="https://www.pokemoncenter-online.com/static/image/logo.jpg" property="og:image"/>
    <meta content="@Pokemon_cojp" name="site"/>
    <meta content="summary" name="twitter:card"/>
-   <meta content="タイムアウト : ポケモンセンターオンライン" name="twitter:title"/>
+   <meta content="ご注文完了 : ポケモンセンターオンライン" name="twitter:title"/>
    <meta content="ポケモンオフィシャルショップ。ポケモンセンターオリジナルのおもちゃや雑貨、ステーショナリーなど、バリエーション豊富な商品とポケモンセンターオンライン限定商品も販売しています。 " name="twitter:description"/>
    <meta content="noindex, nofollow" name="robots"/>
    <script src="//10964629.collect.igodigital.com/collect.js" type="text/javascript">
    </script>
+   <script async="true" src="//static.criteo.net/js/ld/ld.js" type="text/javascript">
+   </script>
+   <script type="text/javascript">
+    window.criteo_q = window.criteo_q || [];
+				window.criteo_q.push(
+					{ event: "setAccount", account: [51352,72690] },
+					{ event: "setSiteType", type: "d" },
+					{ event: "trackTransaction", id: "21050700685", item: [
+						{id: "4521329314112", price: "4950", quantity: "1"},
+						]
+					}
+				);
+   </script>
    <link href="https://www.pokemoncenter-online.com/" hreflang="ja" rel="alternate">
     <link href="/contents/css/enhance.css" rel="stylesheet"/>
     <title>
-     タイムアウト : ポケモンセンターオンライン
+     ご注文完了 : ポケモンセンターオンライン
     </title>
    </link>
   </meta>
  </head>
  <body>
   <script>
-   dataLayer = [{'utype': 'none','ukb': '','cart_total': '0'}];
+   dataLayer = [{
+    'transactionId': '21050700685',
+    'transactionAffiliation': '',
+    'transactionTotal': 4500,
+    'transactionTax': 450,
+    'transactionShipping': 165,
+    'transactionProducts': [
+   {'sku' : '4521329314112', 'name' : '【予約】ポケモンカードゲーム ソード＆シールド 拡張パック 漆黒のガイスト  BOX', 'category' : '', 'price' : '4950', 'quantity' : '1'}],
+'utype': 'member','uid': '1536094','ukb': '','cart_total': '4950'}];
   </script>
   <noscript>
    <iframe height="0" src="//www.googletagmanager.com/ns.html?id=GTM-59SH2K" style="display:none;visibility:hidden" width="0">
@@ -67,8 +88,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
   <script>
    _etmc.push(["setOrgId", "10964629"]);
-			_etmc.push(["setUserInfo", {"email": ""}]);
-			_etmc.push(["trackPageView"]);
+			_etmc.push(["setUserInfo", {"email": "1536094"}]);
+			_etmc.push(["trackConversion", {"cart": [
+{"item": "4521329314112", "quantity": "1", "price": "4950", "unique_id": "4521329314112", "discount": "4950"}
+   ]}]);
   </script>
   <div id="wrap">
    <header>
@@ -85,9 +108,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </a>
      </p>
      <ul>
+      <li class="mr_name">
+       ようこそとしあき　にわ さん
+      </li>
       <li>
-       <a href="https://www.pokemoncenter-online.com/?main_page=login">
-        ログイン/会員登録
+       <a href="https://www.pokemoncenter-online.com/?main_page=mypage_top">
+        マイページ
+       </a>
+      </li>
+      <li>
+       <a href="https://www.pokemoncenter-online.com/?main_page=logoff">
+        ログアウト
        </a>
       </li>
      </ul>
@@ -468,27 +499,94 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <!-- gnavi -->
    </header>
    <!-- main -->
-   <div class="session_error" id="contents">
-    <div class="session_error_wrap">
+   <div class="cart" id="contents">
+    <div class="cart_wrap">
      <div class="ttl_wrap">
       <h1>
-       セッションタイムアウト
+       ご注文完了
       </h1>
      </div>
      <div class="box_wrap">
-      <div class="message">
-       <p class="top20">
-        <img alt="セッションタイムアウトです。一定時間操作がなかったためログアウトしました。再度ログインをしてください。" src="/static/image/session_error/session_timeout_txt.jpg"/>
+      <div class="stepArea">
+       <img alt="ご注文完了" src="/static/image/cart/step05_order.png"/>
+      </div>
+      <div class="thanks_txt">
+       <p class="thank_you">
+        ご注文ありがとうございました。
+        <br/>
+        ご注文確認メールをご登録いただきましたメールアドレスにお送りいたしましたので、ご確認ください。
+        <br/>
+        <span>
+         ※メールが届かない場合、マイページのご注文履歴から状況を確認いただくことが可能です。
+        </span>
+        <br/>
+        ※「お支払い受付番号」をご指定のコンビニエンスストアまでお持ちのうえ、お支払い手続きを行ってください。
+        <br/>
+        ご指定のコンビニエンスストアでのお支払い方法については
+        <a href="https://bs.veritrans.co.jp/support/docs/3g/consumer/cvs/pc/lawson.html" style="text-decoration: underline;" target="_blank">
+         こちら
+        </a>
+        <!-- 2018.05.25 Modified by E.Doi -->
+       </p>
+       <p class="thank_number">
+        注文番号：
+        <span>
+         21050700685
+        </span>
+       </p>
+       <p class="thank_number">
+        お支払い受付番号：
+        <span>
+         953603
+        </span>
+       </p>
+       <p class="thank_number">
+        お支払い期限：
+        <span>
+         2021/05/13 23:59
+        </span>
        </p>
       </div>
-      <div class="submit_btn">
-       <a href="https://www.pokemoncenter-online.com/?main_page=login" id="repass_submit">
-        ログイン
+      <div class="cart_campain">
+       <img alt="ご注文ありがとうございました" src="/static/image/swsh/thanks.png"/>
+      </div>
+      <div class="thanks_txt">
+       <p class="thank_you">
+        なお、別途指定のない限り、本メールの受信のみでは、まだ売買契約は成立しておらず、
+        <br/>
+        弊社から商品の出荷をお知らせする旨のメールが発信された時点において契約成立となります。
+       </p>
+      </div>
+      <style>
+       .promoBnr{
+        text-align: center;
+        margin: 0 auto 40px;
+        width: 80%;
+    }
+    .promoBnr p{
+        margin-top: 10px;
+        text-align: left;
+    }
+    .promoBnr img{
+        max-width: 100%;
+    }
+      </style>
+      <!-- <div class="promoBnr">
+    <a href=""><img src="/static/image/cart/" alt=""></a>
+</div> -->
+      <div id="recommender_pc511">
+      </div>
+      <div class="thanks_top">
+       <a class="btn_thanks_top" href="https://www.pokemoncenter-online.com/">
+        TOPに戻る
        </a>
       </div>
      </div>
+     <!-- /box_wrap -->
     </div>
+    <!-- /cart_wrap -->
    </div>
+   <!-- /contents -->
    <!-- /main -->
    <footer>
     <!-- inner -->
@@ -776,12 +874,55 @@ var cart_url_base = 'https://www.pokemoncenter-online.com/?main_page=shopping_ca
   </script>
   <script src="/static/js/view_history.js">
   </script>
+  <div id="__se_hint" style="display: none;">
+   <div id="__se_spec_pc511">
+    <span class="__se_num">
+     5
+    </span>
+    <span class="__se_prod">
+     [4521329314112]
+    </span>
+   </div>
+   <div class="__se_purchases">
+    <span class="__se_prod">
+     4521329314112
+    </span>
+    <span class="__se_sku">
+     4521329314112
+    </span>
+    <span class="__se_price">
+     4500
+    </span>
+    <span class="__se_qty">
+     1
+    </span>
+    <span class="__se_order">
+     21050700685
+    </span>
+    <span class="__se_cust">
+     1536094
+    </span>
+    <span class="__se_device">
+     p
+    </span>
+   </div>
+  </div>
+  <script>
+   (function() {
+var s = document.createElement('script');
+s.type = 'text/javascript';
+s.async = true;
+s.src = '//pokemon.silveregg.net/suite/page?m=pokemon&p=pc_thky&cookie=PE72AfliKsVLhIwpczkN3PXdskRJxwvo&t='+(new Date()).getTime()+'&r='+escape(document.referrer);
+var e = document.getElementsByTagName('script')[0];
+e.parentNode.insertBefore(s,e);
+})();
+  </script>
   <script src="/contents/js/jquery.prime.js">
   </script>
   <script src="https://log.gs3.goo.ne.jp/js/pkmn/gssa.js" type="text/javascript">
   </script>
   <script type="text/javascript">
-   GSSA.set("action", "other");GSSA.send();
+   GSSA.set("action", "conversion");GSSA.set("item", "4521329314112,1,4950");GSSA.set("amount", "4950");GSSA.send();
   </script>
  </body>
 </html>
