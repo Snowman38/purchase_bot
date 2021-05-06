@@ -35,8 +35,12 @@ def get_session():
     response = requests.get(
         'https://www.pokemoncenter-online.com/?main_page=shopping_cart', headers=headers)
 
-    s.cookies.set('device', 'pc')
-    s.cookies.set(response.cookies)
+    response.cookies.get_dict()
+
+    for cookie in response.cookies:
+        s.cookies.set(cookie.name, cookie.value, domain=cookie.domain)
+
+    print(response.cookies.get_dict())
     print(s.cookies)
 
 
@@ -211,7 +215,7 @@ def goToStep3():
     # step2 to step3
     response = s.post('https://www.pokemoncenter-online.com/',
                       headers=headers_step2, params=params_step2, data=data_step2)
-    #soup = BeautifulSoup(response.text, 'html.parser')
+    # soup = BeautifulSoup(response.text, 'html.parser')
     # print(soup.prettify)
     print(str(response.status_code) + '  step2->step3')
     return response.status_code
@@ -258,7 +262,7 @@ def goToStep4():
     # step3 -> step 4
     response = s.post('https://www.pokemoncenter-online.com/',
                       headers=headers_step3, params=params_step3, data=data_step3)
-    #soup = BeautifulSoup(r.text, 'html.parser')
+    # soup = BeautifulSoup(r.text, 'html.parser')
     # print(soup.prettify)
     print(str(response.status_code) + '  step3->step4')
     return response.status_code
