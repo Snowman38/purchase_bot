@@ -9,7 +9,38 @@ username = "nunu18858@gmail.com"
 password = "1278Okamoto"
 item_id = "4521329313641"
 
-s = requests.session()
+s = requests.Session()
+
+
+def get_session():
+    headers = {
+        'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
+        'Connection': 'keep-alive',
+        'sec-ch-ua-mobile': '?0',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-User': '?1',
+        'Sec-Fetch-Dest': 'document',
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'dnt': '1',
+    }
+
+    params = (
+        ('main_page', 'shopping_cart'),
+    )
+
+    response = requests.get(
+        'https://www.pokemoncenter-online.com/?main_page=shopping_cart', headers=headers)
+
+    s.cookies.set('device', 'pc')
+    s.cookies.set(response.cookies)
+    print(s.cookies)
+
+
+get_session()
 
 
 def start_captcha_task(sitekey, client_key):
@@ -135,7 +166,7 @@ def addToCart(item_id):
     return response.status_code
 
 
-addToCart(item_id)
+# addToCart(item_id)
 
 """
 while True:
