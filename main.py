@@ -28,10 +28,6 @@ def get_session():
         'dnt': '1',
     }
 
-    params = (
-        ('main_page', 'shopping_cart'),
-    )
-
     response = requests.get(
         'https://www.pokemoncenter-online.com/?main_page=shopping_cart', headers=headers)
 
@@ -39,12 +35,6 @@ def get_session():
 
     for cookie in response.cookies:
         s.cookies.set(cookie.name, cookie.value, domain=cookie.domain)
-
-    print(response.cookies.get_dict())
-    print(s.cookies)
-
-
-get_session()
 
 
 def start_captcha_task(sitekey, client_key):
@@ -64,9 +54,6 @@ def start_captcha_task(sitekey, client_key):
     return r.json()
 
 
-# captcha_id = start_captcha_task(sitekey, client_key)
-
-
 def get_solved_captcha(task_id, client_key):
     data = {
         "clientKey": client_key,
@@ -76,9 +63,6 @@ def get_solved_captcha(task_id, client_key):
     r = requests.post("https://api.capmonster.cloud/getTaskResult", json=data)
     ("Recieved Captcha.")
     return r.json()
-
-
-# print(get_solved_captcha(captcha_id["taskId"], client_key))
 
 
 def login(username, password, captcha_key):
@@ -115,22 +99,11 @@ def login(username, password, captcha_key):
     r = s.post('https://www.pokemoncenter-online.com/?main_page=login&action=process',
                headers=headers, params=params, data=data)
 
-    soup = BeautifulSoup(r.text, 'html.parser')
-    print(soup.prettify)
+    # soup = BeautifulSoup(r.text, 'html.parser')
+
+    print(r.cookies)
+
     return r.status_code
-
-
-"""
-# Login flow
-while True:
-    if login(username, password, get_solved_captcha(captcha_id["taskId"], client_key)) != 200:
-        login(username, password, get_solved_captcha(
-            captcha_id["taskId"], client_key))
-        print("Could not log-in, retrying.")
-    else:
-        print("Successfully logged in")
-        break
-"""
 
 
 def addToCart(item_id):
@@ -168,18 +141,6 @@ def addToCart(item_id):
     print(str(response.status_code) + '  add to cart')
 
     return response.status_code
-
-
-# addToCart(item_id)
-
-"""
-while True:
-    if addToCart(item_id) != 200:  # unsuccess add to cart .
-        addToCart(item_id)
-        print('retry add-cart process')
-    else:
-       # print(response.text)
-        break
 
 
 def goToStep3():
@@ -221,15 +182,6 @@ def goToStep3():
     return response.status_code
 
 
-while True:
-    if goToStep3() != 200:  # unsuccess to step3 .
-        goToStep3()
-        print('retry step 2')
-    else:
-      #  print(response.text)
-        break
-
-
 def goToStep4():
     headers_step3 = {
         'Connection': 'keep-alive',
@@ -266,17 +218,6 @@ def goToStep4():
     # print(soup.prettify)
     print(str(response.status_code) + '  step3->step4')
     return response.status_code
-
-
-while True:
-    if goToStep4() != 200:  # unsuccess to step 4 .
-        goToStep4()
-        print('retry step 3')
-    else:
-        # print(response.text)
-        break
-
-# step4 Final confirmation
 
 
 def confirmation():
@@ -317,5 +258,11 @@ def confirmation():
 if confirmation() == 200:  # unsuccess to step 4 .
     print('successfully purchase')
 
-# print(response.cookies)
-"""
+
+get_session()
+captcha_id = start_captcha_task(sitekey, client_key)
+login(username, password, get_solved_captcha(captcha_id["taskId"], client_key))
+addToCart(item_id)
+goToStep3()
+goToStep4()
+confirmation()
