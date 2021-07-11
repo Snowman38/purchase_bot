@@ -2,14 +2,14 @@ import requests
 import time
 from bs4 import BeautifulSoup
 
-v3_key = "6LfDcPoUAAAAAM5gneG6VuVeJQLfDpErocIh4fwD"
+v3_key = ""
 v3_source = "https://www.pokemoncenter-online.com/?main_page=checkout_confirmation"
 
-sitekey = "6LcwhoEUAAAAAIPQCm9zx-S7Ai9VBfu28bxIFBw5"
-client_key = "08fa3a631937eae924d92a1de6ae01cd"
+sitekey = ""
+client_key = ""
 
-username = "nunu18858@gmail.com"
-password = "1278Okamoto"
+username = ""
+password = ""
 item_id = "4521329326290"
 
 s = requests.Session()
